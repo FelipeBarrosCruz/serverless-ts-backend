@@ -1,0 +1,81 @@
+{
+  "name": "serverless-ts-backend",
+  "version": "1.0.0",
+  "description": "serverless-ts backend to parse digit line of boleto and convenios",
+  "main": "index.js",
+  "repository": "git@github.com:FelipeBarrosCruz/serverless-ts-backend.git",
+  "author": "FelipeBarrosCruz<felipe.barros.pt@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "tslint": "tslint -c tslint.json -p tsconfig.json",
+    "test": "mocha test/*.test.ts -c -b -R spec -t 30000 --check-leaks --full-trace --recursive",
+    "test:coverage": "nyc yarn test",
+    "test:docker": "docker-compose -f docker-compose.yml up --build --force-recreate --exit-code-from=serverless-ts-backend-test",
+    "watch": "./node_modules/.bin/serverless offline start --port 3001",
+    "watch:docker": "docker-compose -f docker-compose.yml up --build --force-recreate serverless-ts-backend",
+    "debug": "export SLS_DEBUG=* && node --inspect ./node_modules/.bin/serverless offline start --port 3001",
+    "deploy": "./node_modules/.bin/serverless deploy",
+    "package": "./node_modules/.bin/serverless package"
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
+  "mocha": {
+    "require": [
+      "ts-node/register",
+      "source-map-support/register"
+    ],
+    "recursive": true
+  },
+  "nyc": {
+    "all": true,
+    "extends": "@istanbuljs/nyc-config-typescript",
+    "reporter": "text",
+    "extension": [
+      ".ts",
+      ".tsx"
+    ],
+    "exclude": [
+      "test/*.ts",
+      "**/*.d.ts"
+    ]
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "yarn test:docker"
+    }
+  },
+  "devDependencies": {
+    "@types/aws-lambda": "^8.10.40",
+    "@types/chai": "^4.2.8",
+    "@types/dotenv": "^8.2.0",
+    "@types/mocha": "^7.0.1",
+    "chai": "^4.2.0",
+    "dotenv": "^8.2.0",
+    "husky": "^4.2.1",
+    "mocha": "^7.0.1",
+    "serverless": "^1.62.0",
+    "serverless-dotenv-plugin": "^2.3.1",
+    "serverless-offline": "^5.12.1",
+    "serverless-plugin-typescript": "^1.1.9",
+    "ts-mocha": "^6.0.0",
+    "tslint": "^6.0.0",
+    "tslint-config-airbnb": "^5.11.2"
+  },
+  "dependencies": {
+    "@istanbuljs/nyc-config-typescript": "^1.0.1",
+    "@types/joi": "^14.3.4",
+    "aws-lambda": "^1.0.5",
+    "commitizen": "^4.0.3",
+    "cz-conventional-changelog": "^3.1.0",
+    "joi": "^14.3.1",
+    "nyc": "^15.0.0",
+    "source-map-support": "^0.5.16",
+    "ts-node": "^8.6.2",
+    "typescript": "^3.7.5",
+    "zboletos": "^0.0.10"
+  }
+}
